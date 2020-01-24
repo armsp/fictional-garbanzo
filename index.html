@@ -1,4 +1,5 @@
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <!-- <script src="http://d3js.org/d3.v2.min.js?2.9.3"></script> -->
@@ -15,32 +16,93 @@
 </head>
 
 <body>
-    <div id="map" style="height: 100%"></div>
+    <div id="map"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
     <script type="text/javascript">
 
-    var map = L.map('map').setView([13.03741167, 80.14647597], 15);
+    var map = L.map('map').setView([13.03, 80.16], 15);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-			maxZoom: 20,
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-				'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-				'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-			id: 'mapbox/light-v9'
-		}).addTo(map);
-
-    // var featureStyle = {
-    //     "color": "#ff7800",
-    //     "weight": 5,
-    //     "opacity": 0.2
-    // };
+            maxZoom: 20,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/light-v9'
+        }).addTo(map);
 
     var geojsonLayer = new L.GeoJSON.AJAX("gps-logger-android-data.geojson");
-    // var geojsonLayer = {"type": "FeatureCollection","features": [
-// {"type": "Feature","properties":{"time":"2020-01-23T14:52:59.212Z","provider":"gps","time_long":1579791179212,"accuracy":10.72,"altitude":-68.72030639648438,"bearing":10.4,"speed":1.06},"geometry":{"type":"Point","coordinates":[80.14653749,13.03620529]}}]}
     geojsonLayer.addTo(map);
-    // L.geoJSON(geojsonLayer).addTo(map);
+    //console.log(geojsonLayer);
 
+        //var data2;
+        // function connectDots(data) {
+        //     data2 = data
+        //     console.log(data2)
+        //     var features = data.features,
+        //         feature,
+        //         c = [],
+        //         i;
+        //     console.log(features)
+        //     for (i = 0; i < 10; i += 1) {
+        //         feature = features[i];
+        //         // Make sure this feature is a point.
+        //         if (feature.geometry === "Point") {
+        //             c.push(feature.geometry.coordinates);
+        //         }
+        //     }
+        //     return c;
+        // }
+    
+    var check;
+    function isIterable(obj) {
+        // checks for null and undefined
+        if (obj == null) {
+            return false;
+        }
+        return typeof obj[Symbol.iterator] === 'function';
+    }
+    function connectDots(data){
+        console.log("inside the function");
+        //console.log(data);
+        // console.log(data._layers);
+        check = data;
+        // for(i in check){console.log(i);}
+        var c = [];
+        //console.log(c);
+        // Object.keys(check).forEach(function(key) {
+        //     console.log(key, check[key]);
+        // });
+        // Object.keys(check).forEach(function (item, index) {
+        //     console.log(item, index);
+        // });
+        for (const [key, value] of Object.entries(check._layers)){
+            console.log("Key = " + key, "--", "Value = " + value);
+            var x = value._latlng.lng;
+            var y = value._latlng.lat;
+            c.push([x, y]);
+        }
+        // for (var i of check) {
+        //     if (check.hasOwnProperty(i)) {
+        //         //console.log("inside loop");
+        //         // console.log(i);
+        //         var x = check[i]._latlng.lat;
+        //         var y = check[i]._latlng.lng;
+        //         c.push([x, y]);
+        //         callback(c);
+        //     }
+        // }
+        //console.log(c);
+        // alert("Done Looping");
+        return c;
+    }
+    // const clone = JSON.parse(JSON.stringify(geojsonLayer));
+    // console.log(isIterable(clone));
+    // console.log(isIterable(clone._layers));
+    pathCoords = connectDots(geojsonLayer);
+    console.log("PathCoords = " + pathCoords);
+    L.polyline(pathCoords).addTo(map);
+    console.log("Over");
+    // geojsonLayer.addTo(map);
     </script>
 
 </body>
