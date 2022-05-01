@@ -1,0 +1,4 @@
+{"type": "FeatureCollection","features": [
+{"type": "Feature","properties":{"time":"2022-04-30T15:15:01.133Z","provider":"network","time_long":1651331701133,"accuracy":14.17,"altitude":497.1999816894531},"geometry":{"type":"Point","coordinates":[8.4971883,47.424539]}}
+,{"type": "Feature","properties":{"time":"2022-04-30T15:27:41.962Z","provider":"network","time_long":1651332461962,"accuracy":15.863,"altitude":497.1999816894531},"geometry":{"type":"Point","coordinates":[8.4971965,47.424533]}}
+]}
